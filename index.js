@@ -26,6 +26,19 @@ function getAllTable(table) {
   })
 }
 
+function getRooms(type) {
+  mysqlx.getSession('mysqlx://root:lovecats4life@localhost:33060/hotel_inventory')
+      .then(session => {
+          return session.sql(`SELECT Room_availability FROM rooms WHERE Room_type=${type}`).execute()
+          .then(res => {
+              console.log(res.fetchAll());
+          })
+  })
+  .catch(err => {
+    console.log(err);
+  })
+}
+
 function getAvailable(name, table) {
   mysqlx.getSession('mysqlx://root:lovecats4life@localhost:33060/hotel_inventory')
       .then(session => {
