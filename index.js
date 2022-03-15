@@ -13,23 +13,10 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-function getRooms() {
-    mysqlx.getSession('mysqlx://root:password@localhost:33060/hotel_inventory')
-        .then(session => {
-            return session.sql("SELECT * FROM rooms").execute()
-            .then(res => {
-                console.log(res.fetchAll());
-            })
-    })
-    .catch(err => {
-      console.log(err);
-    })
-}
-
-function getToiletries() {
-  mysqlx.getSession('mysqlx://root:password@localhost:33060/hotel_inventory')
+function getAllTable(table) {
+  mysqlx.getSession('mysqlx://root:lovecats4life@localhost:33060/hotel_inventory')
       .then(session => {
-          return session.sql("SELECT * FROM toiletries").execute()
+          return session.sql(`SELECT * FROM ${table}`).execute()
           .then(res => {
               console.log(res.fetchAll());
           })
@@ -39,10 +26,10 @@ function getToiletries() {
   })
 }
 
-function getPantry() {
-  mysqlx.getSession('mysqlx://root:password@localhost:33060/hotel_inventory')
+function getAvailable(name, table) {
+  mysqlx.getSession('mysqlx://root:lovecats4life@localhost:33060/hotel_inventory')
       .then(session => {
-          return session.sql("SELECT * FROM pantry").execute()
+          return session.sql(`SELECT available FROM ${table} WHERE name=${name}`).execute()
           .then(res => {
               console.log(res.fetchAll());
           })
@@ -52,10 +39,36 @@ function getPantry() {
   })
 }
 
-function getAppliance() {
-  mysqlx.getSession('mysqlx://root:password@localhost:33060/hotel_inventory')
+function getDefault(name, table) {
+  mysqlx.getSession('mysqlx://root:lovecats4life@localhost:33060/hotel_inventory')
       .then(session => {
-          return session.sql("SELECT * FROM appliances").execute()
+          return session.sql(`SELECT default FROM ${table} WHERE name=${name}`).execute()
+          .then(res => {
+              console.log(res.fetchAll());
+          })
+  })
+  .catch(err => {
+    console.log(err);
+  })
+}
+
+function updateAvailable(name, qty, table) {
+  mysqlx.getSession('mysqlx://root:lovecats4life@localhost:33060/hotel_inventory')
+      .then(session => {
+          return session.sql(`UPDATE ${table} SET available=${qty} WHERE name=${name}`).execute()
+          .then(res => {
+              console.log(res.fetchAll());
+          })
+  })
+  .catch(err => {
+    console.log(err);
+  })
+}
+
+function updateDefault(name, qty, table) {
+  mysqlx.getSession('mysqlx://root:lovecats4life@localhost:33060/hotel_inventory')
+      .then(session => {
+          return session.sql(`UPDATE ${table} SET default=${qty} WHERE name=${name}`).execute()
           .then(res => {
               console.log(res.fetchAll());
           })
